@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BBC Learning English - Vocab Builder</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body>
+    <header class="bbc-header">
+      <div class="container">
+        <div class="user-selector">
+          <label for="current-user">User:</label>
+          <select id="user-selector" onchange="switchUser(this.value)">
+            <option value="Usuari_1">Usuari 1</option>
+            <option value="Usuari_2">Usuari 2</option>
+            <option value="Usuari_3">Usuari 3</option>
+          </select>
+        </div>
+        <div class="logo">BBC <span>CEFR Vocabulary Book</span></div>
+      </div>
+    </header>
+
+    <nav class="main-nav">
+      <div class="container">
+        <button onclick="router('study')" id="nav-study" class="active">
+          STUDY
+        </button>
+        <button onclick="router('book')" id="nav-book">VOCABULARY BOOK</button>
+        <button onclick="router('stats')" id="nav-stats">PROGRESS</button>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section id="common-filters" class="filter-bar">
+        <select id="f-cefr" onchange="applyFilters()">
+          <option value="ALL">All Levels</option>
+          <option value="A1">A1</option>
+          <option value="A2">A2</option>
+          <option value="B1">B1</option>
+          <option value="B2">B2</option>
+          <option value="C1">C1</option>
+          <option value="C2">C2</option>
+          <option value="NONE">No Level</option>
+        </select>
+        <select id="f-status" onchange="applyFilters()">
+          <option value="ALL">All Status</option>
+          <option value="new">New</option>
+          <option value="learning">Learning</option>
+          <option value="known">Known</option>
+        </select>
+
+        <select id="f-category" onchange="applyFilters()">
+          <option value="ALL">All Categories</option>
+
+          <optgroup label="Main Types">
+            <option value="noun">Noun</option>
+            <option value="verb">Verb</option>
+            <option value="adjective">Adjective</option>
+            <option value="adverb">Adverb</option>
+          </optgroup>
+
+          <optgroup label="Nouns Details">
+            <option value="[C]">[C] Countable</option>
+            <option value="[U]">[U] Uncountable</option>
+            <option value="plural">Plural</option>
+          </optgroup>
+
+          <optgroup label="Verbs Details">
+            <option value="[T]">[T] Transitive</option>
+            <option value="[I]">[I] Intransitive</option>
+            <option value="phrasal verb">Phrasal Verb</option>
+          </optgroup>
+
+          <optgroup label="Other Labels">
+            <option value="preposition">Preposition</option>
+            <option value="conjunction">Conjunction</option>
+            <option value="determiner">Determiner</option>
+            <option value="pronoun">Pronoun</option>
+          </optgroup>
+        </select>
+
+        <input
+          type="text"
+          id="f-search"
+          oninput="applyFilters()"
+          placeholder="Search word..."
+          style="flex-grow: 1"
+        />
+
+        <button
+          onclick="
+            document.getElementById('modal-edit').dataset.isAdding = 'true';
+            openEditModal();
+          "
+          class="btn-add-new"
+        >
+          + Add Word
+        </button>
+      </section>
+
+      <div id="view-study" class="view">
+        <div id="main-card" class="study-card"></div>
+      </div>
+
+      <div id="view-book" class="view hidden">
+        <table class="vocab-table">
+          <thead>
+            <tr>
+              <th>Word</th>
+              <th>CEFR</th>
+              <th>Category</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="book-list"></tbody>
+        </table>
+      </div>
+
+      <div id="view-stats" class="view hidden"></div>
+    </main>
+
+    <div id="modal-edit" class="modal hidden">
+      <div class="modal-content">
+        <h3 id="modal-title">Edit / Add Word</h3>
+        <div class="field" id="new-headword-container">
+          <label>Word Name</label>
+          <input type="text" id="new-headword" />
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>CEFR</label>
+            <select id="edit-cefr">
+              <option value="">-</option>
+              <option value="A1">A1</option>
+              <option value="A2">A2</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="C1">C1</option>
+              <option value="C2">C2</option>
+            </select>
+          </div>
+
+          <div class="field" style="flex: 2">
+            <label>Category (comma separated)</label>
+            <input type="text" id="edit-cat" placeholder="e.g. verb, [T]" />
+            <div id="category-suggestions" class="suggestion-tags"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Phonetic (e.g. /əˈbændən/)</label>
+          <input
+            type="text"
+            id="edit-phonetic"
+            placeholder="Enter phonetic transcription..."
+          />
+        </div>
+
+        <div class="field">
+          <label>Translation</label>
+          <input type="text" id="edit-trans" />
+        </div>
+        <div class="field">
+          <label>Definition</label>
+          <textarea id="edit-def" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label>Examples (one per line)</label>
+          <textarea id="edit-ex" rows="3"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button onclick="closeEditModal()" class="btn-no">Cancel</button>
+          <button onclick="saveChanges()" class="btn-yes">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="danger-zone"
+      style="
+        margin-top: 50px;
+        padding: 20px;
+        background: #fff5f5;
+        border: 1px solid #feb2b2;
+        text-align: center;
+        border-radius: 8px;
+      "
+    >
+      <p style="color: #c53030; font-size: 0.9rem">
+        Erase all custom words and learning progress.
+      </p>
+      <button
+        onclick="resetAllData()"
+        style="
+          background: #e53e3e;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: bold;
+        "
+      >
+        Reset All Data
+      </button>
+    </div>
+
+    <!--    <script src="dades.js"></script> -->
+    <script src="script.js"></script>
+  </body>
+</html>
