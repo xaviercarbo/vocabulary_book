@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 const SHEET_URL =
-  "https://script.google.com/macros/s/AKfycbz_g6EKdfj6EXySkpATxbqB40b4MYGqUl0eR4DLuVGNNwxzQcNKEa-ebnbnSdR0CJBj/exec";
+  "https://script.google.com/macros/s/AKfycbxe46msC2XuGNUEk53E0jn6d1r-hWL0056PZ2PHGzK5xdmSoJV1Ro09ElmKNtVo3vg/exec";
 
 // 2. CARREGA DE DADES (Núvol)
 async function loadCloudData() {
