@@ -245,56 +245,48 @@ function renderStudyCard() {
   const container = document.getElementById("main-card");
   if (!container || !currentWord) return;
 
-  // 1. Càlculs i dades del progrés
   const totalKnown = Object.values(progress).filter(
     (p) => p.status === "known",
   ).length;
   const studiedToday = getWordsStudiedToday();
-
   const wordStatus = progress[currentWord.headword]?.status || "new";
+
   const statusLabels = {
-    new: { text: "🆕 New", class: "status-new" },
-    learning: { text: "📖 Learning", class: "status-learning" },
-    known: { text: "✅ Known", class: "status-known" },
+    new: { text: "🆕 NEW", class: "status-new" },
+    learning: { text: "📖 LEARNING", class: "status-learning" },
+    known: { text: "✅ KNOWN", class: "status-known" },
   };
   const currentStatus = statusLabels[wordStatus];
-
   const urlWord = encodeURIComponent(currentWord.headword.toLowerCase());
 
-  // 2. Generem el contingut
   container.innerHTML = `
-        <div class="card-header-stats">
-            <div class="cefr-badge">${currentWord.cefr || "---"}</div>
-            <div class="status-pill-indicator ${currentStatus.class}">
-                ${currentStatus.text}
+    <div class="study-card-wrapper">
+        <div class="card-meta-bar">
+            <div class="meta-left">
+                <span class="cefr-badge">${currentWord.cefr || "---"}</span>
+                <span class="status-pill-indicator ${currentStatus.class}">${currentStatus.text}</span>
+                <span class="stat-pill">🎯 ${studiedToday}</span>
+                <span class="stat-pill">🔥 ${currentStreak}</span>
+                <span class="stat-pill">🏅 ${totalKnown}</span>
             </div>
-
-            <div class="stat-pill" style="background: #fff8e1; border: 1px solid #ffca28; color: #856404;">
-                🎯 Today: <strong>${studiedToday}</strong>
-            </div>
-            <div class="stat-pill">🔥 Streak: ${currentStreak}</div>
-            <div class="stat-pill">🏅 Total: ${totalKnown}</div>
-            
-            <div class="card-actions-top">
-                <button onclick="openEditModal()" class="btn-edit-small">✏️ Edit</button>
-                <button onclick="updateStatus('learning')" class="btn-status learning">Still Learning</button>
-                <button onclick="updateStatus('known')" class="btn-status known">I Know It</button>
-                <button onclick="nextWord()" class="btn-status next">Next ➔</button>
-            </div>
+            <button onclick="openEditModal()" class="btn-edit-small">✏️ Edit</button>
         </div>
         
         <div class="card-body">
-            <div class="headword-row" style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px;">
-                <h2 style="margin: 0;">${currentWord.headword}</h2>
-                <div class="audio-controls" style="display: flex; align-items: center; gap: 10px;">
-                    <span class="phonetic-text" style="color: #666; font-size: 1.1rem;">
-                        ${currentWord.phonetic || ""}
-                    </span>
-                   <button onclick="speakWord('${String(currentWord.headword).replace(/'/g, "\\'")}')" class="btn-audio" title="Listen UK English">
-                      🔊
-                   </button>
+            <div class="main-action-row">
+                <div class="word-side">
+                    <h2>${currentWord.headword}</h2>
+                    <span class="phonetic-text">${currentWord.phonetic || ""}</span>
+                    <button onclick="speakWord('${String(currentWord.headword).replace(/'/g, "\\'")}')" class="btn-audio">🔊</button>
+                </div>
+
+                <div class="buttons-side">
+                    <button onclick="updateStatus('learning')" class="btn-status learning">Learning</button>
+                    <button onclick="updateStatus('known')" class="btn-status known">Known</button>
+                    <button onclick="nextWord()" class="btn-status next">Next ➔</button>
                 </div>
             </div>
+
             <div class="word-cat-container">
                  ${(Array.isArray(currentWord.categories)
                    ? currentWord.categories
@@ -309,40 +301,41 @@ function renderStudyCard() {
                    .join("")}
             </div>
             
-            <div class="info-block">
-                <strong>Definition:</strong>
-                <p>${currentWord.definition || "No definition available."}</p>
-            </div>
-            
-            <div class="info-block">
-                <strong>Examples:</strong>
-                <ul>${(currentWord.userSentences || []).map((s) => `<li>${s}</li>`).join("")}</ul>
-            </div>
-
-            <div class="practise-box">
-                <strong>Practise:</strong>
-                <div class="practise-input-group">
-                    <input type="text" id="practice-input" placeholder="Type the word here..." onkeyup="checkPractice(this)">
-                    <button class="btn-reveal" onclick="revealLetter()">Hint</button>
+            <div class="content-grid">
+                <div class="info-block">
+                    <strong>Definition:</strong>
+                    <p>${currentWord.definition || "No definition available."}</p>
                 </div>
-                <p id="practice-feedback" class="hidden"></p>
+                
+                <div class="info-block">
+                    <strong>Examples:</strong>
+                    <ul>${(currentWord.userSentences || []).map((s) => `<li>${s}</li>`).join("")}</ul>
+                </div>
             </div>
 
-            <details>
-                <summary>Show Translation</summary>
-                <p class="trans-text">${currentWord.translation || "---"}</p>
-            </details>
+<div class="practise-box">
+    <div class="practise-input-group">
+        <label for="practice-input" style="font-size: 12px; font-weight: bold; color: #64748b; margin-right: 5px;">PRACTISE:</label>
+        <input type="text" id="practice-input" placeholder="Type the word..." onkeyup="checkPractice(this)">
+        <button class="btn-reveal" onclick="revealLetter()">Hint</button>
+        
+        <details class="inline-trans">
+            <summary title="Show translation">Translate</summary>
+            <div class="trans-popup">${currentWord.translation || "---"}</div>
+        </details>
+    </div>
+    <p id="practice-feedback" class="hidden" style="margin: 5px 0 0 75px; font-size: 13px;"></p>
+</div>
 
             <div class="dictionaries-box">
-                <strong>External Dictionaries:</strong>
                 <div class="dict-icons">
-                    <a href="https://dictionary.cambridge.org/dictionary/english/${urlWord}" target="_blank" title="Cambridge Dictionary" class="dict-link cambridge"></a>
-                    <a href="https://www.collinsdictionary.com/dictionary/english/${urlWord}" target="_blank" title="Collins Dictionary" class="dict-link collins"></a>
-                    <a href="https://www.merriam-webster.com/dictionary/${urlWord}" target="_blank" title="Merriam-Webster" class="dict-link merriam"></a>
-                    <a href="https://www.britannica.com/dictionary/${urlWord}" target="_blank" title="Britannica" class="dict-link britannica"></a>
+                    <a href="https://www.collinsdictionary.com/dictionary/english/${urlWord}" target="_blank" class="dict-link collins"></a>
+                    <a href="https://dictionary.cambridge.org/dictionary/english/${urlWord}" target="_blank" class="dict-link cambridge"></a>
+                    <a href="https://www.merriam-webster.com/dictionary/${urlWord}" target="_blank" class="dict-link merriam"></a>
                 </div>
             </div>
-        </div>`;
+        </div>
+    </div>`;
 }
 
 function showSuccessAnimation() {
@@ -411,22 +404,26 @@ async function updateStatus(newStatus) {
 // 5. VISTA BOOK I EDICIÓ
 function renderBook() {
   const tbody = document.getElementById("book-list");
+  if (!tbody) return;
+
   tbody.innerHTML = filteredList
     .map((item) => {
       const p = progress[item.headword] || { status: "new" };
-      // Dins del .map de renderBook:
-      const safeWord = item.headword.replace(/'/g, "\\'"); // Escapa l'apòstrof: ' passa a \'
+      // Escapem l'apòstrof per evitar errors en el botó d'editar
+      const safeWord = item.headword.replace(/'/g, "\\'");
 
       return `
-    <tr>
-        <td><strong>${item.headword}</strong></td>
-        <td><span class="badge-cefr">${item.cefr || "-"}</span></td>
-        <td><small>${(item.categories || []).join(", ")}</small></td>
-        <td><span class="status-tag ${p.status}">${p.status.toUpperCase()}</span></td>
-        <td>
+        <tr>
+          <td data-label="Word"><strong>${item.headword}</strong></td>
+          <td data-label="Level"><span class="badge-cefr">${item.cefr || "-"}</span></td>
+          <td data-label="Categories"><small>${(item.categories || []).join(", ")}</small></td>
+          <td data-label="Status">
+            <span class="status-tag ${p.status}">${p.status.toUpperCase()}</span>
+          </td>
+          <td data-label="Actions">
             <button onclick="editFromBook('${safeWord}')" class="btn-icon">✏️</button>
-        </td>
-    </tr>`;
+          </td>
+        </tr>`;
     })
     .join("");
 }

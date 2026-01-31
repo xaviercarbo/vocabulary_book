@@ -1,28 +1,50 @@
+/* 1. VARIABLES I RESETS */
 :root {
   --bbc-red: #21205f;
   --bg: #f6f6f6;
   --teal: #007185;
+  --status-new: #ebf8ff;
+  --status-learning: #fffaf0;
+  --status-known: #f0fff4;
 }
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: sans-serif;
   background: var(--bg);
   margin: 0;
   color: #333;
+  line-height: 1.5;
 }
+
 .container {
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 20px;
 }
+
+/* 2. HEADER I NAV */
 .bbc-header {
   background: var(--bbc-red);
   color: white;
   padding: 15px 0;
 }
+
+.bbc-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .logo {
   font-weight: bold;
   font-size: 24px;
 }
+
 .logo span {
   font-weight: normal;
   margin-left: 10px;
@@ -33,7 +55,11 @@ body {
   background: white;
   border-bottom: 1px solid #ddd;
   margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
+
 .main-nav button {
   background: none;
   border: none;
@@ -42,686 +68,639 @@ body {
   font-weight: bold;
   font-size: 14px;
 }
+
 .main-nav button.active {
   border-bottom: 3px solid var(--bbc-red);
   color: var(--bbc-red);
 }
 
-.filter-bar {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-.filter-bar select,
-.filter-bar input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-.btn-add-new {
-  background: #2ecc71;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.study-card {
+/* 3. TARGETA D'ESTUDI (STUDY CARD) */
+.study-card-wrapper {
   background: white;
   border-radius: 12px;
-  padding: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1000px; /* Recuperem l'amplada original */
+  margin: 20px auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
+
 .card-header-stats {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  padding: 20px;
+  background: #f8f9fa;
   border-bottom: 1px solid #eee;
-  padding-bottom: 15px;
-}
-.cefr-badge {
-  background: #212121;
-  color: white;
-  padding: 5px 15px;
-  border-radius: 4px;
-  font-weight: bold;
-}
-.stat-pill {
-  background: #f0f0f0;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-}
-.card-actions-top {
-  margin-left: auto;
   display: flex;
-  gap: 5px;
+  flex-direction: column;
+  gap: 15px;
 }
+
+/* Files de dades dins del header */
+.header-main-info,
+.header-stats-row,
+.card-actions-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+}
+
+.header-stats-row {
+  justify-content: space-between; /* Escampa Today, Streak, Total */
+}
+
+.card-actions-top {
+  justify-content: space-between; /* Edit a l'esquerra, botons a la dreta */
+}
+
+/* 4. BOTONS I PILLS */
+.stat-pill {
+  background: #edf2f7;
+}
+
+.cefr-badge {
+  background: #2d3748;
+  color: white;
+}
+
+.stat-pill {
+  background: white;
+  color: #475569;
+}
+
+.cefr-badge,
+.status-pill-indicator,
+.stat-pill {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  height: 32px; /* Alçada fixa per a tots */
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.status-new {
+  background: var(--status-new);
+  color: #2b6cb0;
+}
+.status-learning {
+  background: var(--status-learning);
+  color: #c05621;
+}
+.status-known {
+  background: var(--status-known);
+  color: #2f855a;
+}
+
 .btn-status {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
   cursor: pointer;
   font-weight: bold;
+}
+
+.btn-status.learning {
+  background: #feebc8;
+  color: #c05621;
 }
 .btn-status.known {
-  background: #e6ffed;
-  color: #1e4620;
-}
-.btn-status.learning {
-  background: #eef3ff;
-  color: #004085;
+  background: #c6f6d5;
+  color: #2f855a;
 }
 .btn-status.next {
-  background: #212121;
+  background: #2d3748;
   color: white;
 }
-.btn-edit-small {
-  background: none;
-  border: 1px solid #ddd;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
+
+/* 5. COS DE LA TARGETA (BODY) */
+.card-body {
+  padding: 30px;
 }
 
-.card-body h2 {
-  font-size: 3.5rem;
-  margin: 10px 0;
-  color: #222;
-}
-.word-cat {
-  color: #666;
-  font-style: italic;
-  margin-bottom: 20px;
-}
-.info-block {
-  margin-bottom: 15px;
-}
-.trans-text {
-  background: #fffde7;
-  padding: 10px;
-  border-radius: 4px;
-}
-
-/* Stats & Book */
-.vocab-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
-.vocab-table th,
-.vocab-table td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
-}
-.status-tag {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-}
-.status-tag.known {
-  background: #e6ffed;
-  color: #1e4620;
-}
-.status-tag.learning {
-  background: #eef3ff;
-  color: #004085;
-}
-
-.stats-card-horizontal {
+.headword-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background: white;
-  padding: 15px 25px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  border-left: 6px solid var(--teal);
-}
-.level-info {
-  display: flex;
   gap: 20px;
-  flex-grow: 1;
-  justify-content: center;
-}
-.mini-bar {
-  width: 120px;
-  height: 10px;
-  background: #eee;
-  border-radius: 5px;
-  overflow: hidden;
-}
-.mini-bar div {
-  height: 100%;
-  background: #2ecc71;
+  margin-bottom: 15px;
 }
 
-.global-summary {
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  text-align: center;
-  margin-bottom: 30px;
+.headword-row h2 {
+  font-size: 2.5rem;
+  margin: 0;
 }
-.summary-grid {
-  display: flex;
-  justify-content: space-around;
+
+.cambridge-label {
+  background: #eef2f7;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  border: 1px solid #cfd8dc;
+}
+
+.info-block {
+  margin-top: 20px;
+}
+
+.practise-box {
+  background: #f1f3f4;
+  padding: 15px;
+  border-radius: 8px;
   margin: 20px 0;
 }
-.progress-bar-big {
-  height: 20px;
-  background: #eee;
-  border-radius: 10px;
-  overflow: hidden;
-}
-.progress-bar-big div {
-  height: 100%;
-  background: #2ecc71;
-}
 
-/* Feedback Overlay */
-.feedback-overlay {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255, 255, 255, 0.9);
-  padding: 30px;
-  border-radius: 20px;
-  text-align: center;
-  z-index: 2000;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-}
-.medal-anim {
-  font-size: 4rem;
-  display: block;
-  animation: bounce 0.6s infinite alternate;
-}
-@keyframes bounce {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.2);
-  }
-}
-
-/* Danger Zone */
-.danger-zone {
-  margin-top: 50px;
-  padding: 30px;
-  background: #fff5f5;
-  border-radius: 10px;
-  text-align: center;
-  border: 1px solid #feb2b2;
-}
-.btn-reset {
-  background: #e53e3e;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
+.practise-input-group {
+  display: flex;
+  gap: 10px;
   margin-top: 10px;
 }
 
-/* Modal */
+.practise-input-group input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 6. PANTALLES PETITES (RESPONSIVE) */
+@media (max-width: 768px) {
+  .header-stats-row {
+    justify-content: center;
+  }
+
+  .card-actions-top {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .status-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .headword-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
+/* 7. ALTRES (MODALS I TAULES) */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 3000;
+  z-index: 1000;
 }
+
 .modal-content {
   background: white;
   padding: 25px;
   border-radius: 12px;
-  width: 500px;
+  width: 90%;
+  max-width: 500px;
 }
+
 .hidden {
   display: none !important;
 }
-.field {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
+
+/*----------------------------------------------------------------------------*/
+
+/* --- VARIABLES I BASES --- */
+:root {
+  --bbc-red: #21205f;
+  --bg: #f2f4f7;
+  --white: #ffffff;
+  --text: #1a1a1a;
+  --border: #d1d5db;
 }
-.row {
+
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  margin: 0;
+  color: var(--text);
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- HEADER I NAV (Estil BBC) --- */
+.bbc-header {
+  background: var(--bbc-red);
+  color: white;
+  padding: 12px 0;
+  border-bottom: 4px solid #e21b21;
+}
+.bbc-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.logo span {
+  font-weight: 300;
+  margin-left: 8px;
+  opacity: 0.8;
+}
+
+.main-nav {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.main-nav .container {
+  display: flex;
+  gap: 5px;
+}
+.main-nav button {
+  background: none;
+  border: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #4b5563;
+  font-size: 13px;
+  transition: 0.2s;
+}
+.main-nav button.active {
+  color: var(--bbc-red);
+  border-bottom: 4px solid var(--bbc-red);
+}
+
+/* --- BARRA DE CERCA (Més bonica) --- */
+
+/* BARRA DE CERCA: Alineació total amb la taula */
+.search-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 20px auto;
+  padding: 15px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
   display: flex;
   gap: 10px;
 }
 
-/* Estil per al comptador diari a Progress */
-.stat-box-today {
-  background: #fff8e1; /* Groc suau bonic */
-  padding: 10px 20px;
+.card-actions-top.search-container input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+/* --- STUDY CARD: HEADER ORGANITZAT --- */
+.study-card-wrapper {
+  background: white;
   border-radius: 12px;
-  border: 2px solid #ffca28;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.card-header-stats {
+  background: #f8fafc;
+  padding: 20px;
+  border-bottom: 1px solid #edf2f7;
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
-
-.stat-value-today {
-  font-size: 2.2rem;
-  color: #f57c00;
-  display: block;
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: #8d6e63;
-  text-transform: uppercase;
-}
-
-/* Animació quan el comptador puja */
-@keyframes pulse-gold {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px #ffca28;
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Contenidor de targetes superiors */
-.stats-row-top {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.stat-card-modern {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #eee;
-}
-
-.stat-card-modern.today {
-  border-left: 5px solid #ffca28;
-  background: #fffde7;
-}
-.stat-card-modern.total {
-  border-left: 5px solid #2196f3;
-}
-.stat-card-modern.known {
-  border-left: 5px solid #4caf50;
-}
-.stat-card-modern.percent {
-  border-left: 5px solid #9c27b0;
-}
-
-.stat-icon {
-  font-size: 1.5rem;
-}
-.stat-label {
-  font-size: 0.7rem;
-  color: #777;
-  text-transform: uppercase;
-  font-weight: bold;
-  display: block;
-}
-.stat-value {
-  font-size: 1.4rem;
-  color: #222;
-  font-weight: 800;
-}
-
-/* Files de nivell SLIM (per evitar scrolling) */
-.levels-container-slim {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.level-row-slim {
-  background: white;
-  padding: 8px 15px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
   gap: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.level-badge-slim {
-  background: #212121;
-  color: white;
-  font-weight: bold;
-  padding: 4px 10px;
-  border-radius: 4px;
-  min-width: 35px;
-  text-align: center;
-}
-
-.level-progress-info {
+/* Línia superior unificada */
+.header-top-row {
   display: flex;
+  flex-wrap: wrap; /* Perquè en mòbil baixi de línia */
+  gap: 10px;
   align-items: center;
-  flex-grow: 1;
-  gap: 15px;
+  justify-content: space-between;
+  background: #f8fafc;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
 }
 
-.level-count {
-  font-size: 0.85rem;
-  min-width: 100px;
-  color: #555;
+.badges-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.cefr-badge {
+  background: #1e293b;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 14px;
 }
 
-.mini-bar-slim {
-  flex-grow: 1;
-  height: 8px;
-  background: #eee;
-  border-radius: 4px;
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.stat-card {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  font-size: 13px;
+}
+.stat-card strong {
+  display: block;
+  font-size: 16px;
+  color: var(--bbc-red);
+}
+
+/* --- BOTONS D'ACCIÓ DALT --- */
+.card-actions-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.btn-edit-small {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* --- MODALS (Recuperem l'estil net) --- */
+.modal {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+}
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  width: 95%;
+  max-width: 550px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--bbc-red);
+}
+.field {
+  margin-bottom: 15px;
+}
+.field label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: #64748b;
+}
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+/* --- TAULES (Alineació perfecta) --- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
   overflow: hidden;
 }
-
-.mini-bar-slim div {
-  height: 100%;
-  background: #4caf50;
-  transition: width 0.5s ease;
-}
-
-.level-percent {
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: #777;
-  min-width: 40px;
-  text-align: right;
-}
-
-.mastery-icon {
-  font-size: 1.2rem;
-}
-.level-row-slim.mastered {
-  background: #f1f8e9;
-  border: 1px solid #c5e1a5;
-}
-
-.dictionaries-box {
-  margin-top: 20px;
-  padding-top: 15px;
-  border-top: 1px dashed #ddd;
+th {
+  background: #f8fafc;
   text-align: left;
+  padding: 15px;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #64748b;
+  border-bottom: 2px solid #edf2f7;
+}
+td {
+  padding: 15px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
-.dictionaries-box strong {
-  font-size: 0.8rem;
-  color: #777;
-  display: block;
-  margin-bottom: 10px;
+/* --- PROGRESS / STATS PAGE --- */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.big-stat-card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.big-stat-card .number {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--bbc-red);
+}
+
+.dict-link.cambridge {
+  background-image: url("https://www.google.com/s2/favicons?domain=dictionary.cambridge.org&sz=64");
+}
+.dict-link.collins {
+  background-image: url("https://www.google.com/s2/favicons?domain=collinsdictionary.com&sz=64");
+}
+.dict-link.merriam {
+  background-image: url("https://www.google.com/s2/favicons?domain=merriam-webster.com&sz=64");
 }
 
 .dict-icons {
   display: flex;
   gap: 15px;
+  margin-top: 10px;
 }
 
 .dict-link {
-  width: 35px;
-  height: 35px;
-  display: inline-block;
+  display: block;
+  width: 40px;
+  height: 40px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  border-radius: 6px;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-  border: 1px solid #eee;
-  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s;
 }
 
 .dict-link:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
 }
 
-/* Assignació d'imatges (Ajusta els noms de fitxer segons les teves imatges) */
-.cambridge {
-  background-image: url("cambridge-logo.png");
-}
-.collins {
-  background-image: url("collins-logo.png");
-}
-.merriam {
-  background-image: url("merriam-logo.png");
-}
-.britannica {
-  background-image: url("britannica-logo.png");
+/* Barra superior molt fina per estalviar espai */
+.card-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
 }
 
+.meta-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* LA FILA CLAU: Paraula i Botons junts */
+.main-action-row {
+  display: flex;
+  justify-content: space-between; /* Paraula a l'esquerra, botons a la dreta */
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 20px;
+}
+
+.word-side {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.word-side h2 {
+  margin: 0;
+  font-size: 2.2rem;
+  color: var(--bbc-red);
+}
+
+.buttons-side {
+  display: flex;
+  gap: 8px;
+}
+
+/* Compactem una mica els botons perquè caben millor */
+.btn-status {
+  padding: 8px 12px;
+  font-size: 13px;
+  white-space: nowrap; /* Evita que el text del botó es trenqui */
+}
+
+/* Gràcies al flex-wrap, si la pantalla és petita, els botons baixaran sols */
+@media (max-width: 800px) {
+  .main-action-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .buttons-side {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* Optimització de la pràctica per estalviar espai vertical */
+.practise-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inline-trans {
+  margin-left: auto;
+}
+
+.inline-trans summary {
+  font-size: 13px;
+  color: var(--teal);
+  cursor: pointer;
+  font-weight: bold;
+}
+/* Contenidor de pràctica més compacte */
 .practise-box {
-  margin: 20px 0;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 10px;
-  border: 1px solid #e9ecef;
+  background: #f8fafc;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin: 15px 0;
 }
 
 .practise-input-group {
   display: flex;
+  align-items: center;
   gap: 10px;
 }
 
-#practice-input {
-  flex-grow: 1;
-  padding: 12px;
-  border: 2px solid #ddd;
+.practise-input-group input {
+  flex: 1; /* L'input agafa tot l'espai restant */
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  outline: none;
-  transition: all 0.3s;
+  font-size: 14px;
 }
 
-.btn-reveal {
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 0 15px;
+/* Estil per al "Translate" a la mateixa barra */
+.inline-trans {
+  position: relative;
+}
+
+.inline-trans summary {
+  list-style: none; /* Treu la fletxa per defecte */
+  background: #e2e8f0;
+  padding: 6px 12px;
   border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
   cursor: pointer;
+  color: #475569;
+  transition: 0.2s;
 }
 
-.practice-success {
-  color: #28a745;
-  font-weight: bold;
-  margin-top: 8px;
-  font-size: 0.9rem;
+.inline-trans summary:hover {
+  background: #cbd5e1;
 }
 
-/* Animació de la celebració */
-.celebration-overlay {
+/* El text de la traducció surt com un petit "globus" per no moure la caixa */
+.trans-popup {
   position: absolute;
-  top: 0;
-  left: 0;
   right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 15px;
+  bottom: 100%;
+  background: #1e293b;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 10;
-  animation: fadeIn 0.3s ease-out;
-}
-
-.celebration-overlay div {
-  font-size: 4rem;
-  animation: popScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.celebration-overlay p {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #4caf50;
-  margin-top: 10px;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes popScale {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Indicador d'estat a la fitxa Study */
-.status-pill-indicator {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  border: 1px solid transparent;
-}
-
-.status-new {
-  background-color: #e3f2fd;
-  color: #1976d2;
-  border-color: #bbdefb;
-}
-
-.status-learning {
-  background-color: #fff3e0;
-  color: #f57c00;
-  border-color: #ffe0b2;
-}
-
-.status-known {
-  background-color: #e8f5e9;
-  color: #2e7d32;
-  border-color: #c8e6c9;
-}
-
-/* Millora per a la pill de Today perquè ressalti */
-.today-pill {
-  background: #fff8e1 !important;
-  border: 1px solid #ffca28 !important;
-  color: #856404 !important;
-}
-
-.word-cat {
-  font-style: italic;
-  color: #666;
-  margin-bottom: 15px;
-  font-size: 0.95rem;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* Opcional: si vols que cada categoria sembli una etiqueta */
-.word-cat span {
-  background: #f0f2f5;
-  padding: 2px 8px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-.word-cat-container {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-}
-
-.cambridge-label {
-  background: #eef2f7;
-  color: #455a64;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  border: 1px solid #cfd8dc;
-  font-family:
-    "Courier New", Courier, monospace; /* Per donar aire de codi [T], [C] */
-}
-
-.suggestion-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.tag-suggestion {
-  background: #f1f3f4;
-  border: 1px solid #dadce0;
-  color: #3c4043;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.tag-suggestion:hover {
-  background: #e8f0fe;
-  border-color: #1a73e8;
-  color: #1a73e8;
-}
-
-.btn-audio {
-  background: #f0f2f5;
-  border: 1px solid #cfd8dc;
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition:
-    transform 0.2s,
-    background 0.2s;
-}
-
-.btn-audio:hover {
-  background: #e8f0fe;
-  transform: scale(1.1);
-  border-color: #1a73e8;
-}
-
-.phonetic-text {
-  font-family: "Lucida Sans Unicode", "Arial Unicode MS", sans-serif;
-  font-style: normal;
 }
